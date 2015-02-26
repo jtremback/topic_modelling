@@ -1,10 +1,15 @@
-from __future__ import print_function
-import json
+from pyhashxx import hashxx
 import leveldb
 
 db = leveldb.LevelDB('./db')
-subset = open('subset')
-documents = open('documents', 'w')
+new_db = leveldb.LevelDB('./new_db')
+
+count = 0
+for record in db.RangeIter():
+    count += 1
+    if count % 1000 == 0:
+        print(count)
+    new_db.Put(str(hashxx(record[0])), record[1])
 
 # count = 0
 
@@ -12,9 +17,9 @@ documents = open('documents', 'w')
 #   json_line = json.loads(line)
 
 #   if 'terms' in json_line['val']:
-#     count += 1
-#     if count % 1000 == 0:
-#       print(count)
+    # count += 1
+    # if count % 1000 == 0:
+    #   print(count)
 
 #     db.Put(str(json_line['key']), json.dumps(json_line['val']))
 
